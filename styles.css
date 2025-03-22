@@ -1,0 +1,32 @@
+.calculator {
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.essences {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+input, select {
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+}
+
+.essence, input, label, select {
+    display: block;
+}
+
+.error {
+    background: red;
+    color: white;
+}
+
+.result-container {
+    display: none;
+}
+
+.result-container.show {
+    display: block;
+}
