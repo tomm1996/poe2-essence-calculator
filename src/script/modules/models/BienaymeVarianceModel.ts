@@ -11,6 +11,8 @@ interface ProfitRangeResult {
 }
 
 export class BienaymeVarianceModel {
+    public name = 'bienayme';
+
     async calculateProfitRange(
         essences: Essence[],
         quantityBought: number,

@@ -1,53 +1,82 @@
-import { Essence } from './Essence.ts';
+import { Essence, EssenceObject } from './Essence.ts';
+import { Calculator } from './Calculator.ts';
+import { BienaymeVarianceModel } from './models/BienaymeVarianceModel.ts';
+import { MonteCarloSimulationModel } from './models/MonteCarloSimulationModel.ts';
 
 interface PriceData {
-    items: Array<{
-        type: string;
-        latest_price: { price: string };
-        id: string;
-    }>;
+    items: Array<EssenceObject>;
+}
+
+interface DataProps {
+    url: string;
+    model: BienaymeVarianceModel | MonteCarloSimulationModel;
 }
 
 export class Data {
+    public model: BienaymeVarianceModel | MonteCarloSimulationModel;
+    public simpleMode: boolean = true;
+
     private readonly url: string;
     private priceData: PriceData | null = null;
-    public essences: Essence[] = [];
+    private simpleModeEssences: Essence[] = [];
+    private extendedModeEssences: Essence[] = [];
 
-    constructor(url: string) {
+    constructor({ url, model }: DataProps) {
         this.url = url;
+        this.model = model;
+    }
+
+    get essences() {
+        return this.simpleMode ? this.simpleModeEssences : this.extendedModeEssences;
     }
 
     async fetchData(): Promise<void> {
-        await this.fetchPrices();
-        this.createEssences();
-    }
-
-    private async fetchPrices(): Promise<void> {
         try {
             const response = await fetch(this.url);
             if (!response.ok) {
-                console.error(response);
+                console.error('Failed to fetch prices:', response.statusText);
                 return;
             }
-
             this.priceData = await response.json();
-        } catch (error: unknown) {
-            let errorMessage = 'Error fetching Price Data';
-
-            if (error instanceof Error) {
-                errorMessage = error.message;
-            }
-
-            console.error(errorMessage);
+        } catch (error) {
+            console.error('Error fetching price data:', error);
         }
+
+        this.extendedModeEssences = this.createEssencesFromFetchedData();
+        this.simpleModeEssences = this.createSimpleEssences();
     }
 
-    private createEssences(): void {
-        if (this.priceData) {
-            this.priceData.items.forEach(item => this.essences.push(new Essence(item)));
-            this.essences = this.essences.sort((a, b) => a.id.localeCompare(b.id));
-
-            this.essences.forEach(essence => essence.render());
+    private createEssencesFromFetchedData(): Essence[] {
+        if (!this.priceData) {
+            return [];
         }
+
+        return this.priceData.items.map(item => new Essence(item)).sort((a, b) => a.id.localeCompare(b.id));
+    }
+
+    private createSimpleEssences(): Essence[] {
+        const calc = new Calculator({ model: this.model, essences: this.extendedModeEssences });
+
+        const { averageValueLesser, averageValueGreater } = calc.getAverageEssenceValues();
+        const input = document.querySelector('[data-amount-input]') as HTMLInputElement;
+        const boughtPrice = input?.value && input.value.length > 0 ? input.value : '1';
+
+        return [
+            new Essence({
+                type: 'Bought',
+                id: 'essence-of-the-mind',
+                latest_price: { price: boughtPrice },
+            }),
+            new Essence({
+                type: 'Average Lesser Essence Price',
+                id: 'essence-of-sorcery',
+                latest_price: { price: averageValueLesser.toFixed(3).toString() },
+            }),
+            new Essence({
+                type: 'Average Greater Essence Price',
+                id: 'greater-essence-of-ruin',
+                latest_price: { price: averageValueGreater.toFixed(3).toString() },
+            }),
+        ];
     }
 }

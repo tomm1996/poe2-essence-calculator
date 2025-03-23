@@ -45,7 +45,7 @@
                 </label>
             </div>
 
-            <div data-essence-prices>
+            <div data-preview-essences>
                 <div id="loading-container" class="loading-container">
                     <div class="spinner"></div>
                 </div>

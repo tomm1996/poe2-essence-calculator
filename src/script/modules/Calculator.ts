@@ -10,7 +10,7 @@ interface CalculatorProps {
 }
 
 export class Calculator {
-    private model: BienaymeVarianceModel | MonteCarloSimulationModel;
+    public model: BienaymeVarianceModel | MonteCarloSimulationModel;
     private readonly essences: Essence[];
     private readonly greaterEssenceDropChance: Decimal;
 

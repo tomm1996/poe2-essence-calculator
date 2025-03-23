@@ -20,9 +20,10 @@ export class UI {
     private models: Array<BienaymeVarianceModel | MonteCarloSimulationModel> = [];
 
     constructor() {
-        this.data = new Data('data.json');
         const bienamye = new BienaymeVarianceModel();
         const montecarlo = new MonteCarloSimulationModel();
+
+        this.data = new Data({ url: 'data.json', model: this.models[1] });
 
         this.models.push(bienamye, montecarlo);
 
@@ -35,6 +36,7 @@ export class UI {
         this.addListeners();
 
         await this.data.fetchData();
+        this.createEssences();
     }
 
     addListeners(): void {
@@ -43,8 +45,23 @@ export class UI {
 
             await this.calculate();
         });
-    }
 
+        document.querySelector('[data-model]')?.addEventListener('change', ev => {
+            const model = this.models.find(model => model.name === (ev.target as HTMLInputElement).value);
+
+            if (model === undefined) {
+                return;
+            }
+
+            this.calc.model = model;
+            this.data.model = model;
+        });
+    }
+    createEssences() {
+        Promise.all(this.data.essences.map(essence => essence.render())).then(() => {
+            document.querySelector('[data-preview-essences] .loading-container')?.classList.add('hide');
+        });
+    }
     async calculate(): Promise<void> {
         const selected = document.querySelector('[data-buy-type]') as HTMLSelectElement;
         const quantityInput = document.querySelector('[data-amount]') as HTMLInputElement;

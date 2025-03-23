@@ -22,7 +22,7 @@ interface ProfitRangeResult {
 
 export class MonteCarloSimulationModel {
     private worker: Worker;
-
+    public name = 'montecarlo';
     constructor() {
         this.worker = new Worker(new URL('./monteCarloWorker.ts', import.meta.url), { type: 'module' });
     }
