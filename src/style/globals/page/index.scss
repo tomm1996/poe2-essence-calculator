@@ -1,0 +1,40 @@
+body {
+    background: rgb(23, 23, 23);
+    color: #f1f1f1;
+}
+
+.page-wrapper {
+    min-height: 100vh;
+
+    background: radial-gradient(ellipse at top, rgb(34, 42, 54), transparent), radial-gradient(ellipse at bottom, rgb(21, 21, 72), transparent);
+}
+.page-inner {
+    padding: 2rem;
+
+    max-width: 87.5rem;
+    margin: 0 auto;
+}
+
+.essence-prices,
+.result-container {
+    background: #111111;
+}
+
+.result-container {
+    display: none;
+    margin: 0 auto;
+    &.loading-container {
+        min-height: 20rem;
+    }
+}
+
+.result-container.show {
+    display: block;
+    width: max-content;
+    padding: 1rem;
+    min-width: 50rem;
+}
+
+footer {
+    text-align: center;
+}
