@@ -33,7 +33,7 @@
             Your average Profit if you invest <strong data-invest></strong><br>
             to buy <strong data-quantity></strong> <strong data-type></strong><br> at
             <strong data-single-price></strong> a piece <br>is <strong data-profit></strong><br>
-            with a predicted fluctuation of <strong data-variance>WIP %</strong> in profit margin.
+            with a predicted fluctuation of <strong data-variance>WIP %</strong> in profit margin.<br>
             Therefore, your estimated profit will range between <strong data-variance-min></strong> and <strong data-variance-max></strong>
         </p>
     </div>
