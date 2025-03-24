@@ -28,8 +28,7 @@ body {
     }
 }
 
-.result-container.show {
-    display: block;
+.result-container {
     width: max-content;
     padding: 1rem;
     min-width: 50rem;
@@ -37,4 +36,8 @@ body {
 
 footer {
     text-align: center;
+}
+
+.hide {
+    display: none;
 }

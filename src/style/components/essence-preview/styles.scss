@@ -1,0 +1,25 @@
+.essence-preview {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    .preview-element {
+        border: 1px solid rgba(255, 255, 255, .5);
+        display: flex;
+        align-items: center;
+        gap: .25rem;
+        padding: 0.25rem 0.5rem;
+        span {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        img {
+            width: 2rem;
+        }
+        span img {
+            width: 1.5rem;
+        }
+    }
+}

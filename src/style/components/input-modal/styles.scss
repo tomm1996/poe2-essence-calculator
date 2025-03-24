@@ -1,0 +1,67 @@
+
+.modal-wrapper {
+    display: none;
+}
+
+.modal {
+    max-height: 100vh;
+    overflow: hidden;
+    position: relative;
+    .modal-wrapper {
+        display: flex;
+    }
+}
+
+.modal-wrapper {
+    display: none;
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    background: {
+        color: rgba(0,0,0,.5)
+    }
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.input-modal {
+    background: {
+        color: rgb(34, 42, 54);
+    }
+    width: fit-content;
+    height: fit-content;
+    margin: 0 auto;
+    padding: 2rem;
+
+    .essences {
+        gap: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        margin: {
+            top: 2rem;
+            bottom: 2rem;
+        }
+    }
+
+    .essence {
+        border-radius: 0.5rem;
+        background: black;
+        padding: 1rem;
+        width: 25rem;
+        display: grid;
+        grid-template-areas:
+            "image title title"
+            "image input input";
+        img {
+            grid-area: image;
+        }
+        .title {
+
+        }
+        input {
+            grid-area: input;
+        }
+    }
+}

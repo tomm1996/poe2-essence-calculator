@@ -1,28 +1,20 @@
-.essences {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 1rem;
-}
-
 input,
 select {
     margin-top: 0.5em;
     margin-bottom: 1em;
 }
 
-.essence,
-input,
 label,
-select {
+select,
+input:not([type=checkbox]):not([type=radio]) {
     display: block;
 }
-/* Container for the toggle and label */
+
 .toggle-container {
     display: flex;
     align-items: center;
 }
 
-/* Styling for the descriptive label */
 .toggle-label {
     color: #fff;
     margin-right: 0.5rem;
@@ -80,7 +72,7 @@ input:checked + .slider:before {
     color: white;
 }
 
-.input-container {
+.input-container button {
     text-align: center;
 }
 

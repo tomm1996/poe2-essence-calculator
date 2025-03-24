@@ -56,10 +56,22 @@ export class UI {
             this.calc.model = model;
             this.data.model = model;
         });
+
+        document.querySelector('#toggle-switch')?.addEventListener('change', (ev: Event) => {
+            this.data.simpleMode = !(ev.target as HTMLInputElement).checked;
+
+            this.createEssences();
+        });
     }
     createEssences() {
+        const essenceContainer = document.querySelector('[data-preview-essences]');
+        this.data.simpleMode = !(document.querySelector('#toggle-switch') as HTMLInputElement).checked;
+        if (essenceContainer) {
+            essenceContainer.innerHTML = '';
+        }
+
         Promise.all(this.data.essences.map(essence => essence.render())).then(() => {
-            document.querySelector('[data-preview-essences] .loading-container')?.classList.add('hide');
+            document.querySelector('.loading-container')?.classList.add('hide');
         });
     }
     async calculate(): Promise<void> {
