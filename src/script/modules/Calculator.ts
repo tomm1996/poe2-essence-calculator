@@ -2,7 +2,6 @@ import { Essence } from './Essence.ts';
 import { BienaymeVarianceModel } from './models/BienaymeVarianceModel.ts';
 import { MonteCarloSimulationModel } from './models/MonteCarloSimulationModel.ts';
 import Decimal from 'decimal.js-light';
-import { UI } from './UI.ts';
 
 interface CalculatorProps {
     essences: Essence[];
@@ -11,7 +10,7 @@ interface CalculatorProps {
 
 export class Calculator {
     public model: BienaymeVarianceModel | MonteCarloSimulationModel;
-    private readonly essences: Essence[];
+    public essences: Essence[];
     private readonly greaterEssenceDropChance: Decimal;
 
     constructor({ essences, model }: CalculatorProps) {
@@ -20,8 +19,8 @@ export class Calculator {
         this.greaterEssenceDropChance = new Decimal('0.007');
     }
 
-    calculatePredictedProfit(essenceId: string, quantityBought: number): string {
-        const totalCost = new Decimal(this.getTotalInvestment(essenceId, quantityBought));
+    calculatePredictedProfit(essencePrice: number, quantityBought: number): string {
+        const totalInvestment = new Decimal(essencePrice).times(new Decimal(quantityBought));
         const totalTrades = new Decimal(quantityBought).dividedBy(3);
 
         const { averageValueLesser, averageValueGreater } = this.getAverageEssenceValues();
@@ -32,13 +31,13 @@ export class Calculator {
             .plus(averageValueLesser.times(lesserEssenceDropChance));
 
         const expectedTotalValue = totalTrades.times(expectedValuePerTrade);
-        const expectedProfit = expectedTotalValue.minus(totalCost);
+        const expectedProfit = expectedTotalValue.minus(totalInvestment);
 
         return expectedProfit.toDecimalPlaces(3).toString();
     }
 
     async calculateProfitRange(
-        essenceId: string,
+        essencePrice: number,
         quantityBought: number,
     ): Promise<
         | {
@@ -51,8 +50,8 @@ export class Calculator {
         | false
     > {
         const { averageValueLesser, averageValueGreater } = this.getAverageEssenceValues();
-        const totalInvestment = new Decimal(this.getTotalInvestment(essenceId, quantityBought));
-        const expectedProfit = this.calculatePredictedProfit(essenceId, quantityBought);
+        const totalInvestment = new Decimal(this.getTotalInvestment(essencePrice, quantityBought));
+        const expectedProfit = this.calculatePredictedProfit(essencePrice, quantityBought);
 
         try {
             return await this.model.calculateProfitRange(
@@ -70,20 +69,8 @@ export class Calculator {
         }
     }
 
-    getBoughtEssence(essenceId: string): Essence {
-        const essence = this.essences.find(essence => essence.id === essenceId);
-
-        if (!essence) {
-            UI.showError('Something went wrong. Please reload the page');
-            throw new Error('Essence not found in data somehow');
-        }
-
-        return essence;
-    }
-
-    getTotalInvestment(essenceId: string, quantityBought: number): number {
-        const essence = this.getBoughtEssence(essenceId);
-        return essence ? essence.inputPrice * quantityBought : 0;
+    getTotalInvestment(essencePrice: number, quantityBought: number): number {
+        return essencePrice * quantityBought;
     }
 
     getAverageEssenceValues(): {

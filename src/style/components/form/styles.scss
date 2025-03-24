@@ -10,6 +10,13 @@ input:not([type=checkbox]):not([type=radio]) {
     display: block;
 }
 
+.price-per-essence, .buy-type {
+    display: none;
+    &.show {
+        display: block;
+    }
+}
+
 .toggle-container {
     display: flex;
     align-items: center;
@@ -68,12 +75,24 @@ input:checked + .slider:before {
 }
 
 .error {
-    background: red;
+    background: #80070a;
     color: white;
+    width: max-content;
+    margin: {
+        top: 0;
+        right: auto;
+        bottom: 2rem;
+        left: auto;
+    };
+    p {
+        padding: 1rem;
+    }
 }
 
 .input-container button {
-    text-align: center;
+    display: block;
+    width: max-content;
+    margin: 0 auto;
 }
 
 .manual-inputs {

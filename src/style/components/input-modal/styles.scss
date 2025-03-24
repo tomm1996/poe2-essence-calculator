@@ -30,35 +30,61 @@
     background: {
         color: rgb(34, 42, 54);
     }
-    width: fit-content;
     height: fit-content;
     margin: 0 auto;
     padding: 2rem;
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 100%;
+    max-height: 80%;
+    max-width: 80%;
+    container-name: modal;
+    container-type: inline-size;
 
     .essences {
         gap: 1rem;
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        max-width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+
         margin: {
             top: 2rem;
             bottom: 2rem;
         }
+        @container modal (min-width: 72rem) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        @container modal (min-width: 90rem) {
+            grid-template-columns: repeat(4, 1fr);
+        }
     }
-
+    .fixed-bar {
+        position: sticky;
+        width: 100%;
+        display: flex;
+        top: 0;
+        justify-content: space-between;
+        background: rgba(0, 0, 0, 0.5);
+    }
     .essence {
         border-radius: 0.5rem;
         background: black;
         padding: 1rem;
-        width: 25rem;
+        align-items: start;
         display: grid;
+        grid-template-columns: 5rem 1fr 1fr;
         grid-template-areas:
             "image title title"
             "image input input";
+
         img {
+            align-self: center;
+            justify-self: center;
             grid-area: image;
         }
         .title {
-
+            grid-area: title;
         }
         input {
             grid-area: input;

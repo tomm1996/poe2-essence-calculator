@@ -23,8 +23,40 @@ body {
 .result-container {
     display: none;
     margin: 0 auto;
-    &.loading-container {
-        min-height: 20rem;
+    position: relative;
+    min-height: 12rem;
+
+    .loading-result-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+        &.show {
+            display: block;
+        }
+    }
+    .result {
+        display: none;
+        &.show {
+            display: block;
+        }
+    }
+    &.show {
+        display: block;
+    }
+}
+
+.model {
+    margin: 2rem auto;
+    width: max-content;
+    max-width: 30rem;
+    background: #111111;
+    padding: 0.5rem 1rem;
+    input {
+        margin: {
+            right: 0.5em;
+        }
     }
 }
 
@@ -33,6 +65,7 @@ body {
     padding: 1rem;
     min-width: 50rem;
 }
+
 
 footer {
     text-align: center;

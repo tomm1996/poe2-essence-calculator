@@ -1,5 +1,8 @@
 .essence-preview {
-    margin-top: 2rem;
+    margin: {
+        top: 2rem;
+        bottom: 2rem;
+    }
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;

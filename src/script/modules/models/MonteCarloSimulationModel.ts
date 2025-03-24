@@ -2,7 +2,6 @@ import Decimal from 'decimal.js-light';
 import { Essence } from '../Essence.ts';
 
 interface WorkerData {
-    essences: Essence[];
     totalTrades: number;
     numSimulations: number;
     totalInvestment: number;
@@ -19,7 +18,22 @@ interface ProfitRangeResult {
     fluctuationPercentage: string;
     standardDeviation: string;
 }
-
+/**
+ * Estimates the profit range using Monte Carlo simulations.
+ * It simulates a large number of trade sequences, randomly determining the outcome of each trade
+ * based on the drop chances of greater and lesser essences, to model the distribution of potential profits.
+ * The model computes the minimum and maximum profits, variance, and standard deviation from the simulation results.
+ *
+ * - Simulated Total Profit for a Sequence:
+ *     totalProfit = Σ (outcome of each trade)
+ * - Expected Profit:
+ *     expectedProfit = (averageValueGreater * greaterEssenceDropChance * totalTrades) + (averageValueLesser * lesserEssenceDropChance * totalTrades) - totalInvestment
+ * - Variance and Standard Deviation:
+ *     Calculated based on the distribution of simulated total profits.
+ * - Profit Range:
+ *     minProfit = 2.5th percentile of simulated profits
+ *     maxProfit = 97.5th percentile of simulated profits
+ */
 export class MonteCarloSimulationModel {
     private worker: Worker;
     public name = 'montecarlo';
@@ -28,7 +42,7 @@ export class MonteCarloSimulationModel {
     }
 
     async calculateProfitRange(
-        essences: Essence[],
+        _essences: Essence[],
         quantityBought: number,
         totalInvestment: Decimal,
         expectedProfit: Decimal,
@@ -45,9 +59,7 @@ export class MonteCarloSimulationModel {
         const averageValueGreaterNum = averageValueGreater.toNumber();
         const averageValueLesserNum = averageValueLesser.toNumber();
 
-        // Data to send to the worker
         const workerData: WorkerData = {
-            essences,
             totalTrades,
             numSimulations,
             totalInvestment: totalInvestmentNum,
@@ -68,7 +80,6 @@ export class MonteCarloSimulationModel {
                 reject(error);
             };
 
-            // Send data to worker
             this.worker.postMessage(workerData);
         });
     }

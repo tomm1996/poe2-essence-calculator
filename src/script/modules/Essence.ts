@@ -6,6 +6,7 @@ export interface EssenceObject {
     type: string;
     latest_price: LatestPrice;
     id: string;
+    simpleMode: boolean;
 }
 
 export class Essence {
@@ -14,12 +15,16 @@ export class Essence {
     public inputPrice: number;
     public id: string;
     public hide: boolean = false;
+    private priceText: Text | undefined;
+    public simpleMode: boolean;
+    private input: HTMLInputElement | undefined;
 
-    constructor({ type, latest_price, id }: EssenceObject) {
+    constructor({ type, latest_price, id, simpleMode }: EssenceObject) {
         this.name = type;
         this.fetchedPrice = parseFloat(latest_price.price);
         this.id = id;
         this.inputPrice = this.getPriceFromCookies() ?? this.fetchedPrice;
+        this.simpleMode = simpleMode;
     }
 
     get isGreater(): boolean {
@@ -36,13 +41,12 @@ export class Essence {
             const label = this.createEssenceLabel();
             essenceContainer.appendChild(label);
 
-            if (this.name === 'Bought') {
-                this.addBuyPriceListener();
-                return;
-            }
-
             const preview = this.createPreviewElement();
             essencePreviewContainer.appendChild(preview);
+
+            if (this.simpleMode) {
+                return;
+            }
 
             const option = this.createBuyTypeOption();
             buyTypeSelect.appendChild(option);
@@ -63,10 +67,10 @@ export class Essence {
         container.appendChild(nameElement);
 
         const priceElement = document.createElement('span');
-        const priceText = document.createTextNode(this.inputPrice.toString());
+        this.priceText = document.createTextNode(this.inputPrice.toString());
         const priceImageElement = this.createImageElement('exalted-orb');
 
-        priceElement.appendChild(priceText);
+        priceElement.appendChild(this.priceText);
         priceElement.appendChild(priceImageElement);
 
         container.appendChild(priceElement);
@@ -78,14 +82,17 @@ export class Essence {
         label.classList.add('essence');
         label.setAttribute('data-essence', this.id);
 
+        const nameElement = document.createElement('span');
         const nameText = document.createTextNode(this.name);
-        label.appendChild(nameText);
+        nameElement.classList.add('title');
+        nameElement.appendChild(nameText);
+        label.appendChild(nameElement);
 
         const imageElement = this.createImageElement();
         label.appendChild(imageElement);
 
-        const input = this.createInputElement();
-        label.appendChild(input);
+        this.input = this.createInputElement();
+        label.appendChild(this.input);
 
         return label;
     }
@@ -122,6 +129,9 @@ export class Essence {
     private handleInputChange(ev: Event): void {
         const target = ev.target as HTMLInputElement;
         this.inputPrice = parseFloat(target.value);
+        if (this.priceText) {
+            this.priceText.textContent = parseFloat(target.value).toString();
+        }
         this.updatePriceInCookies();
     }
 
@@ -131,23 +141,6 @@ export class Essence {
         option.textContent = this.name;
 
         return option;
-    }
-
-    private addBuyPriceListener() {
-        const buyPriceInput = document.querySelector('[data-buy-price]');
-
-        buyPriceInput?.removeEventListener('change', this.handleBuyPriceChange);
-        buyPriceInput?.addEventListener('change', this.handleBuyPriceChange.bind(this));
-    }
-
-    private handleBuyPriceChange(event: Event) {
-        const value = (event.target as HTMLInputElement).value;
-
-        if (!value.length && parseFloat(value)) {
-            return;
-        }
-
-        this.inputPrice = parseFloat(value);
     }
     private getPriceFromCookies(): number | null {
         const cookieValue = document.cookie
@@ -167,6 +160,12 @@ export class Essence {
 
     public resetPrice(): void {
         this.inputPrice = this.fetchedPrice;
+        if (this.priceText) {
+            this.priceText.textContent = this.fetchedPrice.toString();
+        }
+        if (this.input) {
+            this.input.value = this.fetchedPrice.toString();
+        }
         this.updatePriceInCookies();
     }
 }

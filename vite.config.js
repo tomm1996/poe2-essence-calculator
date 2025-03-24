@@ -7,6 +7,7 @@ export default defineConfig({
             entry: ['index.php'],
         }),
     ],
+    base: '',
     root: './',
     build: {
         outDir: './public',

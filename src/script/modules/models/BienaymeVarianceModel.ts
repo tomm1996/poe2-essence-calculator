@@ -10,6 +10,24 @@ interface ProfitRangeResult {
     standardDeviation: string;
 }
 
+/**
+ * Calculates the profit range based on Bienaymé's variance formula.
+ * It models the total profit as the sum of individual profits from each trade,
+ * considering the average values of lesser and greater essences, and their associated drop chances.
+ * The model computes the expected profit, variance, and standard deviation to estimate the profit range.
+ *
+ * - Expected Value per Trade (E[X]):
+ *     E[X] = (averageValueGreater * greaterEssenceDropChance) + (averageValueLesser * lesserEssenceDropChance)
+ * - Variance per Trade (Var[X]):
+ *     Var[X] = (averageValueGreater^2 * greaterEssenceDropChance) + (averageValueLesser^2 * lesserEssenceDropChance) - E[X]^2
+ * - Total Variance (Var[Total]):
+ *     Var[Total] = Var[X] * totalTrades
+ * - Standard Deviation (SD):
+ *     SD = √Var[Total]
+ * - Profit Range:
+ *     minProfit = expectedProfit - (2 * SD)
+ *     maxProfit = expectedProfit + (2 * SD)
+ */
 export class BienaymeVarianceModel {
     public name = 'bienayme';
 

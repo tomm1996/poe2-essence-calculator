@@ -16,7 +16,7 @@
 
     <script type="module" src="./src/script/app.ts"></script>
 </head>
-<body class="modal">
+<body>
     <main class="page-wrapper">
         <section class="page-inner">
             <header>
@@ -25,7 +25,6 @@
 
             <div class="intro">
                 Essence Trading Profit Calculator — a tool to help you estimate potential profits from 3 to 1 trading essences at the reforging bench. Here's how it works:
-                <p></p>
                 <ul>
                     <li><strong>Input Your Data:</strong> Enter details such as the types of essences you're trading, the quantity purchased, your total investment, and expected profit.</li>
                     <li><strong>Simulation:</strong> The calculator employs one out of two prediction models that mimic real trading conditions to simulate potential outcomes, considering factors such as drop chances and average values</li>
@@ -43,10 +42,11 @@
                         <span class="slider"></span>
                     </label>
                 </div>
-
+                <small>Essence Prices are from the PoE2 trade Website. Fetching ingame currency exchange prices is not possible at the moment. Adjust the prices to your needs/market as needed by clicking on "Edit Essence Values".</small>
                 <div class="loading-container">
                     <div class="spinner"></div>
                 </div>
+
 
                 <div class="essence-preview" data-preview-essences>
                 </div>
@@ -56,26 +56,32 @@
         <section class="page-inner">
             <section class="calculator">
                 <div class="input-container">
+                    <div class="error" data-errors></div>
+
                     <div class="manual-inputs">
-                        <div class="error" data-errors></div>
-                        <label for="buy-type">
+                        <label for="buy-type" class="buy-type">
                             Essence Type
                             <select name="buy-type" data-buy-type>
                                 <option value="" disabled selected>Choose which Essence you bought</option>
                             </select>
                         </label>
-                        <label for="buy-amount">
+                        <label for="price-per-essence" class="price-per-essence">
+                            Price per Essence
+                            <input name="price-per-essence" type="number" data-price-per-essence>
+                        </label>
+                        <label for="buy-amount" class="buy-amount">
                             Essence Amount
                             <input name="buy-amount" type="number" data-amount>
                         </label>
                     </div>
                     <div class="model">
-                        Pick a prediction Model
-                        <label for="model">
-                            <input name="model" type="radio" value="montecarlo"><span title="O(n × f(Number of Essences, Amount of Trades))">Monte Carlo method</span>
+                        <h3>Pick a prediction Model</h3>
+                        <p>Monte Carlo is more accurate, especially on low amounts and Bienaymé is less resource-intensive. The predictions will converge the higher the bought Amount is.</p>
+                        <label for="montecarlo">
+                            <input id="montecarlo" name="model" type="radio" value="montecarlo" data-model><span title="O(n × f(Number of Essences, Amount of Trades))">Monte Carlo method</span>
                         </label>
-                        <label for="model">
-                            <input name="model" type="radio" value="bienayme"><span title="O(n)">Bienaymé's identity</span>
+                        <label for="bienayme">
+                            <input id="bienayme" name="model" type="radio" value="bienayme" data-model><span title="O(n)">Bienaymé's identity</span>
                         </label>
                     </div>
                     <button class="confirm" data-submit>Calculate</button>
@@ -88,7 +94,7 @@
                     <div class="loading-result-container">
                         <div class="spinner"></div>
                     </div>
-                    <p>
+                    <p class="result">
                         Your average Profit if you invest <strong data-invest></strong><br>
                         to buy <strong data-quantity></strong> <strong data-type></strong><br> at
                         <strong data-single-price></strong> a piece <br>is <strong data-profit></strong><br>
@@ -101,16 +107,17 @@
         <footer class="page-inner">
             <a href="https://github.com/tomm1996/poe2-essence-calculator">Github</a>
             <p>
-                <small><strong>Toms disclaimer:</strong> I'm by no means a mathematician and was kinda vibecoding the models with an LLM so don't sue me if you lose ingame currency when relying on these calculations thx</small>
+                <small><strong>Tom's disclaimer:</strong> I'm by no means a mathematician/statistician and kind of vibecoded the models with an LLM, so don't sue me if you lose ingame currency when relying on these calculations thx</small>
             </p>
         </footer>
 
         <div class="modal-wrapper hide">
             <div class="input-modal">
-                <button class="ghost" data-close>x</button>
+                <div class="fixed-bar">
+                    <button class="delete" data-reset>Reset to estimated market malues</button>
+                    <button class="ghost" data-close>x</button>
+                </div>
                 <div class="essences" data-essences></div>
-                <button class="confirm">Save</button>
-                <button class="delete" data-reset>Reset to estimated market malues</button>
             </div>
         </div>
     </main>

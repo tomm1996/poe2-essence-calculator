@@ -58,19 +58,19 @@ export class Data {
         const calc = new Calculator({ model: this.model, essences: this.extendedModeEssences });
 
         const { averageValueLesser, averageValueGreater } = calc.getAverageEssenceValues();
-        // const input = document.querySelector('[data-amount-input]') as HTMLInputElement;
-        // const boughtPrice = input?.value && input.value.length > 0 ? input.value : '1';
 
         return [
             new Essence({
                 type: 'Average Lesser Essence',
                 id: 'essence-of-sorcery',
                 latest_price: { price: averageValueLesser.toFixed(3).toString() },
+                simpleMode: this.simpleMode,
             }),
             new Essence({
                 type: 'Average Greater Essence',
                 id: 'greater-essence-of-ruin',
                 latest_price: { price: averageValueGreater.toFixed(3).toString() },
+                simpleMode: this.simpleMode,
             }),
         ];
     }
