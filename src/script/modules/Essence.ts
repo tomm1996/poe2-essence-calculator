@@ -1,11 +1,7 @@
-interface LatestPrice {
-    price: string;
-}
-
 export interface EssenceObject {
-    type: string;
-    latest_price: LatestPrice;
-    id: string;
+    text: string;
+    currentPrice: string;
+    apiId: string;
     simpleMode: boolean;
 }
 
@@ -19,10 +15,10 @@ export class Essence {
     public simpleMode: boolean;
     private input: HTMLInputElement | undefined;
 
-    constructor({ type, latest_price, id, simpleMode }: EssenceObject) {
-        this.name = type;
-        this.fetchedPrice = parseFloat(latest_price.price);
-        this.id = id;
+    constructor({ text, currentPrice, apiId, simpleMode }: EssenceObject) {
+        this.name = text;
+        this.fetchedPrice = parseFloat(currentPrice);
+        this.id = apiId;
         this.inputPrice = this.getPriceFromCookies() ?? this.fetchedPrice;
         this.simpleMode = simpleMode;
     }

@@ -15,7 +15,12 @@ interface DataProps {
 export class Data {
     public model: BienaymeVarianceModel | MonteCarloSimulationModel;
     public simpleMode: boolean = true;
-
+    private blacklist: string[] = [
+        'essence-of-insanity',
+        'essence-of-delirium',
+        'essence-of-horror',
+        'essence-of-hysteria',
+    ];
     private readonly url: string;
     private priceData: PriceData | null = null;
     private simpleModeEssences: Essence[] = [];
@@ -51,9 +56,13 @@ export class Data {
             return [];
         }
 
-        return this.priceData.items.map(item => new Essence(item)).sort((a, b) => a.id.localeCompare(b.id));
+        return this.priceData.items
+            .filter(item => !this.blacklist.includes(item.apiId))
+            .map(item => new Essence(item))
+            .sort((a, b) => {
+                return a.id.localeCompare(b.id);
+            });
     }
-
     private createSimpleEssences(): Essence[] {
         const calc = new Calculator({ model: this.model, essences: this.extendedModeEssences });
 
@@ -61,15 +70,15 @@ export class Data {
 
         return [
             new Essence({
-                type: 'Average Lesser Essence',
-                id: 'essence-of-sorcery',
-                latest_price: { price: averageValueLesser.toFixed(3).toString() },
+                text: 'Average Lesser Essence',
+                apiId: 'essence-of-sorcery',
+                currentPrice: averageValueLesser.toFixed(3).toString(),
                 simpleMode: this.simpleMode,
             }),
             new Essence({
-                type: 'Average Greater Essence',
-                id: 'greater-essence-of-ruin',
-                latest_price: { price: averageValueGreater.toFixed(3).toString() },
+                text: 'Average Greater Essence',
+                apiId: 'greater-essence-of-ruin',
+                currentPrice: averageValueGreater.toFixed(3).toString(),
                 simpleMode: this.simpleMode,
             }),
         ];
